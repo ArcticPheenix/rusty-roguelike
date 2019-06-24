@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 tcod = "0.15"
+rand = "0.6.5"
