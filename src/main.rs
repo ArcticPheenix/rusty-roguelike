@@ -20,6 +20,7 @@ const COLOR_DARK_GROUND: Color = Color {
     b: 150,
 };
 
+// Room size and max rooms
 const ROOM_MAX_SIZE: i32 = 10;
 const ROOM_MIN_SIZE: i32 = 6;
 const MAX_ROOMS: i32 = 30;
