@@ -1,5 +1,5 @@
-use std::cmp;
 use rand::Rng;
+use std::cmp;
 use tcod::colors::{self, Color};
 use tcod::console::*;
 use tcod::map::{FovAlgorithm, Map as FovMap};
@@ -15,9 +15,21 @@ const LIMIT_FPS: i32 = 20;
 const MAP_WIDTH: i32 = 80;
 const MAP_HEIGHT: i32 = 45;
 const COLOR_DARK_WALL: Color = Color { r: 0, g: 0, b: 100 };
-const COLOR_LIGHT_WALL: Color = Color { r: 130, g: 110, b: 50 };
-const COLOR_DARK_GROUND: Color = Color { r: 50, g: 50, b: 150 };
-const COLOR_LIGHT_GROUND: Color = Color { r: 200, g: 180, b: 50 };
+const COLOR_LIGHT_WALL: Color = Color {
+    r: 130,
+    g: 110,
+    b: 50,
+};
+const COLOR_DARK_GROUND: Color = Color {
+    r: 50,
+    g: 50,
+    b: 150,
+};
+const COLOR_LIGHT_GROUND: Color = Color {
+    r: 200,
+    g: 180,
+    b: 50,
+};
 
 // Room size and max rooms
 const ROOM_MAX_SIZE: i32 = 10;
@@ -70,7 +82,9 @@ fn make_map() -> (Map, (i32, i32)) {
 
         let new_room = Rect::new(x, y, w, h);
         // run through the other rooms and see if they intersect with this one
-        let failed = rooms.iter().any(|other_room|new_room.intersects_with(other_room));
+        let failed = rooms
+            .iter()
+            .any(|other_room| new_room.intersects_with(other_room));
         if !failed {
             // this means there are no intersections, so this room is valid
             // "paint" it to the map's tiles
@@ -84,7 +98,7 @@ fn make_map() -> (Map, (i32, i32)) {
             } else {
                 // all rooms after the first
                 // connect it to the previous room with a tunnel
-                
+
                 // center coordinates of the previous room
                 let (prev_x, prev_y) = rooms[rooms.len() - 1].center();
 
@@ -141,7 +155,14 @@ impl Object {
     }
 }
 
-fn render_all(root: &mut Root, con: &mut Offscreen, objects: &[Object], map: &Map, fov_map: &mut FovMap, fov_recompute: bool) {
+fn render_all(
+    root: &mut Root,
+    con: &mut Offscreen,
+    objects: &[Object],
+    map: &Map,
+    fov_map: &mut FovMap,
+    fov_recompute: bool,
+) {
     // Set background color of all tiles.
     if fov_recompute {
         // Recompute FOV if needed
@@ -202,7 +223,12 @@ fn main() {
     let mut fov_map = FovMap::new(MAP_WIDTH, MAP_HEIGHT);
     for y in 0..MAP_HEIGHT {
         for x in 0..MAP_WIDTH {
-            fov_map.set(x, y, !map[x as usize][y as usize].block_sight, !map[x as usize][y as usize].blocked);
+            fov_map.set(
+                x,
+                y,
+                !map[x as usize][y as usize].block_sight,
+                !map[x as usize][y as usize].blocked,
+            );
         }
     }
     let mut previous_player_position = (-1, -1);
@@ -213,7 +239,14 @@ fn main() {
 
         // render each object in the list into the offscreen buffer
         let fov_recompute = previous_player_position != (objects[0].x, objects[0].y);
-        render_all(&mut root, &mut con, &objects, &map, &mut fov_map, fov_recompute);
+        render_all(
+            &mut root,
+            &mut con,
+            &objects,
+            &map,
+            &mut fov_map,
+            fov_recompute,
+        );
 
         root.flush();
 
